@@ -29,7 +29,8 @@ sl3_Task <- R6Class(
   class = TRUE,
   public = list(
     initialize = function(data, covariates, outcome = NULL,
-                          outcome_type = NULL, outcome_levels = NULL,
+                          outcome_type = Variable_Type$new("continuous"), 
+                          outcome_levels = NULL,
                           id = NULL, weights = NULL, offset = NULL,
                           time = NULL, nodes = NULL, column_names = NULL,
                           row_index = NULL, folds = NULL, flag = TRUE,
@@ -488,19 +489,6 @@ sl3_Task <- R6Class(
         if (self$has_node("id")) {
           # clustered cross-validation for clustered data
           args$cluster_ids <- self$id
-        }
-        if (self$outcome_type$type %in% c("binomial", "categorical")) {
-          # stratified cross-validation folds for discrete outcomes
-          args$strata_ids <- self$Y
-          if (self$has_node("id")) {
-            # don't use stratified CV if clusters are not nested in strata
-            is_nested <- all(
-              rowSums(table(args$cluster_ids, args$strata_ids) > 0) == 1
-            )
-            if (!is_nested) {
-              args <- args[!(names(args) == "strata_ids")]
-            }
-          }
         }
         new_folds <- do.call(origami::make_folds, args)
         private$.folds <- new_folds
