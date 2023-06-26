@@ -29,7 +29,7 @@ sl3_Task <- R6Class(
   class = TRUE,
   public = list(
     initialize = function(data, covariates, outcome = NULL,
-                          outcome_type = Variable_Type$new("continuous"), 
+                          outcome_type = NULL, 
                           outcome_levels = NULL,
                           id = NULL, weights = NULL, offset = NULL,
                           time = NULL, nodes = NULL, column_names = NULL,
